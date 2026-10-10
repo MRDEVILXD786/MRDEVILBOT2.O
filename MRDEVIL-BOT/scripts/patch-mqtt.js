@@ -1,0 +1,7 @@
+const fs = require('fs'), path = require('path'), parserPath = path.join(__dirname, '..', 'mrdevil-fca', 'node_modules', 'mqtt-packet', 'parser.js');
+!fs.existsSync(parserPath) && (console.log('[patch-mqtt] mqtt-packet parser not found, skipping.'), process.exit(0));
+let content = fs.readFileSync(parserPath, 'utf8');
+content.includes('facebookNonStrictTypes') && (console.log('[patch-mqtt] Already patched, skipping.'), process.exit(0));
+const patched = content.replace(/if \(requiredHeaderFlags != null && headerFlags !== requiredHeaderFlags\) \{[\s\S]*?return this\._emitError\(new Error\(constants\.requiredHeaderFlagsErrors\[cmdIndex\]\)\)\s*\}/, 'if (requiredHeaderFlags != null && headerFlags !== requiredHeaderFlags) {\n      // Facebook sends PUBACK and other ack packets with non-standard header flag bits.\n      // Skip the strict check for those packet types to avoid disconnections.\n      const facebookNonStrictTypes = [4, 5, 7, 9, 11]\n      if (!facebookNonStrictTypes.includes(cmdIndex)) {\n        return this._emitError(new Error(constants.requiredHeaderFlagsErrors[cmdIndex]))\n      }\n    }');
+patched === content && (console.log('[patch-mqtt] Pattern not found, patch may not be needed for this version.'), process.exit(0));
+fs.writeFileSync(parserPath, patched, 'utf8'), console.log('[patch-mqtt] Successfully patched mqtt-packet parser for Facebook compatibility.');

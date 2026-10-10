@@ -1,0 +1,36 @@
+{
+  "name": "mrdevil-bot",
+  "version": "2.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "bot": "node bot.js",
+    "postinstall": "npm --prefix ./mrdevil-fca install --omit=dev --no-audit --no-fund && node scripts/patch-mqtt.js"
+  },
+  "keywords": [
+    "facebook",
+    "messenger",
+    "bot",
+    "fca",
+    "mrdevil"
+  ],
+  "author": "MR DEVIL",
+  "license": "ISC",
+  "description": "Facebook Messenger Bot v2 by MR DEVIL - Powered by mrdevil-fca",
+  "overrides": {
+    "form-data": "^4.0.0"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.0",
+    "@seald-io/nedb": "^4.1.2",
+    "axios": "^1.16.1",
+    "chalk": "^4.1.2",
+    "express": "^4.22.2",
+    "fs-extra": "^11.3.5",
+    "jimp": "^1.6.1",
+    "moment-timezone": "^0.6.2",
+    "node-cron": "^4.2.1",
+    "node-fetch": "^2.7.0",
+    "string-similarity": "^4.0.4"
+  }
+}
